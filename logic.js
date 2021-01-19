@@ -192,6 +192,5 @@ function getStartingPositions() {
             x: 8,
             y: 8
         }
-
     ]
 }
