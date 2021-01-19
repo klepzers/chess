@@ -14,7 +14,7 @@ canvas.height = chessBoardSize;
 let squareSize = chessBoardSize / squaresInRow;
 let totalSquares = Math.pow(squaresInRow, 2);
 
-// Define starting positions from logic.js.
+// Define starting positions from logic.js. 
 let startingPositions = getStartingPositions();
 
 function drawChessGame() {
@@ -47,7 +47,7 @@ function drawBoard() {
 }
 
 function drawInitialPieces() {
-    startingPositions.forEach(function (piece) {
+    startingPositions.forEach(function(piece) {
         drawPiece(piece);
     })
 }
@@ -70,16 +70,18 @@ function clickOnPiece(e) {
 
 function drawPiece(piece) {
     var img = new window.Image();
-    img.addEventListener("load", function () {
+    img.addEventListener("load", function() {
         ctx.drawImage(img, (piece.x - 1) * squareSize, (piece.y - 1) * squareSize);
     });
     const pieceFileNames = {
-        "Q": "Queen",
-        "K": "King",
-        "H": "Knight",
-        "R": "Rook"
-    }
-    //logic to make which piece is necessary
+            "Q": "Queen",
+            "K": "King",
+            "H": "Knight",
+            "R": "Rook",
+            "B": "Bishop",
+            "P": "Pawn"
+        }
+        //logic to make which piece is necessary
     let fileName = "assets/";
     if (piece.isWhite) {
         fileName = fileName + "white";
