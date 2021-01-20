@@ -77,7 +77,9 @@ function drawPiece(piece) {
         "Q": "Queen",
         "K": "King",
         "H": "Knight",
-        "R": "Rook"
+        "R": "Rook",
+        "B": "Bishop",
+        "P": "Pawn"
     }
     //logic to make which piece is necessary
     let fileName = "assets/";
