@@ -194,3 +194,73 @@ function getStartingPositions() {
         }
     ]
 }
+let pieces = getStartingPositions();
+let currentMoveIsWhite = true;
+
+// TODO Create function get piece from it's position.
+function getPieceFromPosition(x, y){
+    for (const piece of pieces) {
+        if (piece.x == x && piece.y == y) {
+            return piece;
+        }
+    }
+}
+console.log(allowedMoves(1,2));
+
+function positionHasNotFriendlyPiece(position){
+    const piece = getPieceFromPosition(position.x, position.y);
+
+    if (typeof piece === "object" && piece.isWhite == currentMoveIsWhite ) {
+        return false;
+    }
+    return typeof position === "object";
+}
+
+function positionHasNotPiece(position){
+    const piece = getPieceFromPosition(position.x, position.y);
+
+    if (typeof piece === "object") {
+        return false;
+    }
+    return typeof position === "object";
+}
+
+function positionHasEnemyPiece(){
+    // TODO make this function work again
+};
+
+function positionWithinBoard(position){
+    if (position.x > 8 || position.x < 1 || position.y > 8 || position.y < 1) {
+        return false;
+    }
+    return typeof position === "object";
+}
+
+function allowedMoves(x,y) {
+    let piece = getPieceFromPosition(x,y);
+    let allowedPositions = [];
+    if (piece.isWhite != currentMoveIsWhite){
+        // TODO remove this when enemy is trying check.
+        return [];
+    }
+    if (piece.type == "H") {
+        allowedPositions.push({"x" : piece.x - 1, "y" : piece.y -2}, {"x" : piece.x + 1, "y" : piece.y -2}, {"x" : piece.x + 2, "y" : piece.y -1}, {"x" : piece.x - 2, "y" : piece.y -1} );
+        allowedPositions = allowedPositions.filter(positionHasNotFriendlyPiece);
+    }
+    if (piece.type == "P") {
+        let dy = 1;
+
+        if (currentMoveIsWhite){
+             dy = -1;
+        }
+        allowedPositions.push({"x" : piece.x ,"y" : piece.y + dy }, {"x" : piece.x + 1,"y" : piece.y + dy }, {"x" : piece.x - 1,"y" : piece.y + dy });
+
+        // First move can go 1 or 2 steps for P. Wrong color is filtered later.
+        if (y == 7 || y == 2) {
+            allowedPositions.push({"x" : piece.x ,"y" : piece.y + 2*dy });
+        }
+    }
+    // TODO remove illegal moves for P (fake killing and obstacle)
+
+    return allowedPositions.filter(positionWithinBoard);
+}
