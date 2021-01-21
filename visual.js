@@ -81,7 +81,6 @@ function drawPiece(piece) {
         "B": "Bishop",
         "P": "Pawn"
     }
-    //logic to make which piece is necessary
     let fileName = "assets/";
     if (piece.isWhite) {
         fileName = fileName + "white";
