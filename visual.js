@@ -33,7 +33,13 @@ function drawChessGame() {
 function drawBoard() {
     // Draw the board using a nested loop.
     for (let x = 0; x < totalSquares; x++) {
+        //NEED LETTERS
+        ctx.fillText("Hello World", 15, x * squareSize);
+
         for (let y = 0; y < totalSquares; y++) {
+            //NEED NUMBERS 
+            ctx.fillText("Hello World", y * squareSize, 15);
+
             if ((x + y) % 2 == 0) {
                 ctx.fillStyle = "whitesmoke";
             } else {
