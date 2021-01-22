@@ -33,13 +33,7 @@ function drawChessGame() {
 function drawBoard() {
     // Draw the board using a nested loop.
     for (let x = 0; x < totalSquares; x++) {
-        //NEED LETTERS
-        ctx.fillText("Hello World", 15, x * squareSize);
-
         for (let y = 0; y < totalSquares; y++) {
-            //NEED NUMBERS 
-            ctx.fillText("Hello World", y * squareSize, 15);
-
             if ((x + y) % 2 == 0) {
                 ctx.fillStyle = "whitesmoke";
             } else {
@@ -68,10 +62,30 @@ function getMousePos(canvas, e) {
 }
 
 function clickOnPiece(e) {
+    //getting mouse position on the clicked piece
     let mousePos = getMousePos(canvas, e);
-    console.log(mousePos);
-    console.log(Math.ceil(mousePos.x / squareSize));
-    console.log(Math.ceil(mousePos.y / squareSize));
+    let boardFieldX = Math.ceil(mousePos.x / squareSize);
+    let boardFieldY = Math.ceil(mousePos.y / squareSize);
+
+    //returning array with allowed moves
+    let allowedPositions = allowedMoves(boardFieldX, boardFieldY);
+    console.log(allowedPositions);
+
+    // for (position of allowedPositions) {
+    //     ctx.beginPath();
+    //     ctx.arc((position.x * squareSize) - (1 / 2 * squareSize), (position.y * squareSize) - (1 / 2 * squareSize), 1 / 8 * squareSize, 0, 2 * Math.PI);
+    //     ctx.strokeStyle = "teal";
+    //     ctx.stroke();
+    // }
+
+    allowedPositions.forEach(position => {
+        ctx.beginPath();
+        ctx.arc((position.x * squareSize) - (1 / 2 * squareSize), (position.y * squareSize) - (1 / 2 * squareSize), 1 / 8 * squareSize, 0, 2 * Math.PI);
+        ctx.strokeStyle = "teal";
+        ctx.stroke();
+    })
+
+
 }
 
 function drawPiece(piece) {
