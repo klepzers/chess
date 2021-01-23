@@ -76,12 +76,23 @@ function clickOnPiece(e) {
 
     //iterating through allowed positions and drawing them on canvas
     allowedPositions.forEach(position => {
+        //draw new squares
+        if ((position.x + position.y) % 2 == 0) {
+            ctx.fillStyle = "pink";
+        } else {
+            ctx.fillStyle = "black";
+        }
+        ctx.fillRect((position.x * squareSize - squareSize), (position.y * squareSize - squareSize), squareSize, squareSize);
+
+        //draw allowed position markers
         ctx.beginPath();
         ctx.arc((position.x * squareSize) - (1 / 2 * squareSize), (position.y * squareSize) - (1 / 2 * squareSize), 1 / 10 * squareSize, 0, 2 * Math.PI);
         ctx.fillStyle = "#e6ac00";
         ctx.fill();
     })
+    console.log(allowedPositions);
 }
+
 
 function drawPiece(piece) {
     var img = new window.Image();
