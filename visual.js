@@ -67,25 +67,20 @@ function clickOnPiece(e) {
     let boardFieldX = Math.ceil(mousePos.x / squareSize);
     let boardFieldY = Math.ceil(mousePos.y / squareSize);
 
+    //highlighting the piece clicked on
+    ctx.strokeStyle = "#e6ac00"
+    ctx.strokeRect(boardFieldX * squareSize - squareSize, boardFieldY * squareSize - squareSize, squareSize, squareSize);
+
     //returning array with allowed moves
     let allowedPositions = allowedMoves(boardFieldX, boardFieldY);
-    console.log(allowedPositions);
 
-    // for (position of allowedPositions) {
-    //     ctx.beginPath();
-    //     ctx.arc((position.x * squareSize) - (1 / 2 * squareSize), (position.y * squareSize) - (1 / 2 * squareSize), 1 / 8 * squareSize, 0, 2 * Math.PI);
-    //     ctx.strokeStyle = "teal";
-    //     ctx.stroke();
-    // }
-
+    //iterating through allowed positions and drawing them on canvas
     allowedPositions.forEach(position => {
         ctx.beginPath();
-        ctx.arc((position.x * squareSize) - (1 / 2 * squareSize), (position.y * squareSize) - (1 / 2 * squareSize), 1 / 8 * squareSize, 0, 2 * Math.PI);
-        ctx.strokeStyle = "teal";
-        ctx.stroke();
+        ctx.arc((position.x * squareSize) - (1 / 2 * squareSize), (position.y * squareSize) - (1 / 2 * squareSize), 1 / 10 * squareSize, 0, 2 * Math.PI);
+        ctx.fillStyle = "#e6ac00";
+        ctx.fill();
     })
-
-
 }
 
 function drawPiece(piece) {
