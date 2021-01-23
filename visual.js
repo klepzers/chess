@@ -17,17 +17,22 @@ let totalSquares = Math.pow(squaresInRow, 2);
 // Define starting positions from logic.js.
 let startingPositions = getStartingPositions();
 
+let pieceImages = {};
+
+function onReady() {
+    drawChessGame();
+    console.log(pieceImages);
+    // Catch e when clicking on a piece.
+    canvas.addEventListener("click", clickOnPiece);
+}
+
 function drawChessGame() {
     // Draws chess board.
     drawBoard();
     // Draw pieces for the beginning of the game.
-    drawInitialPieces();
+    drawPieces();
     // Draw chess pieces.
-    // drawPiece();
-
-
-    // Catch e when clicking on a piece.
-    canvas.addEventListener("click", clickOnPiece);
+    // drawPiece(); 
 }
 
 function drawBoard() {
@@ -46,8 +51,14 @@ function drawBoard() {
     }
 }
 
-function drawInitialPieces() {
-    startingPositions.forEach(function (piece) {
+// function drawInitialPieces() {
+//     startingPositions.forEach(function (piece) {
+//         drawPiece(piece);
+//     })
+// }
+
+function drawPieces() {
+    pieces.forEach(function (piece) {
         drawPiece(piece);
     })
 }
@@ -61,6 +72,7 @@ function getMousePos(canvas, e) {
     };
 }
 
+let oldAllowedPositions = [];
 function clickOnPiece(e) {
     //getting mouse position on the clicked piece
     let mousePos = getMousePos(canvas, e);
@@ -74,25 +86,32 @@ function clickOnPiece(e) {
     //returning array with allowed moves
     let allowedPositions = allowedMoves(boardFieldX, boardFieldY);
 
+    // //drawing new squares to overdraw old allowed moves
+    // oldAllowedPositions.forEach(position => {
+    //     if ((position.x + position.y) % 2 == 0) {
+    //         ctx.fillStyle = "whitesmoke";
+    //     } else {
+    //         ctx.fillStyle = "grey";
+    //     }
+    //     ctx.fillRect((position.x * squareSize - squareSize), (position.y * squareSize - squareSize), squareSize, squareSize);
+    // })
+    //re-draw the whole board
+    drawChessGame();
     //iterating through allowed positions and drawing them on canvas
     allowedPositions.forEach(position => {
-        //draw new squares
-        if ((position.x + position.y) % 2 == 0) {
-            ctx.fillStyle = "pink";
-        } else {
-            ctx.fillStyle = "black";
-        }
-        ctx.fillRect((position.x * squareSize - squareSize), (position.y * squareSize - squareSize), squareSize, squareSize);
-
         //draw allowed position markers
         ctx.beginPath();
         ctx.arc((position.x * squareSize) - (1 / 2 * squareSize), (position.y * squareSize) - (1 / 2 * squareSize), 1 / 10 * squareSize, 0, 2 * Math.PI);
         ctx.fillStyle = "#e6ac00";
         ctx.fill();
     })
-    console.log(allowedPositions);
+    // //saving old allowed positions for hiding them when clicked on next piece
+    // oldAllowedPositions = allowedPositions;
 }
 
+function loadImages() {
+
+}
 
 function drawPiece(piece) {
     var img = new window.Image();
@@ -100,20 +119,25 @@ function drawPiece(piece) {
         ctx.drawImage(img, (piece.x - 1) * squareSize, (piece.y - 1) * squareSize);
     });
     const pieceFileNames = {
-        "Q": "Queen",
-        "K": "King",
-        "H": "Knight",
-        "R": "Rook",
-        "B": "Bishop",
-        "P": "Pawn"
+        Q: "Queen",
+        K: "King",
+        H: "Knight",
+        R: "Rook",
+        B: "Bishop",
+        P: "Pawn"
     }
+
     //logic to make which piece is necessary
     let fileName = "assets/";
+    let color = "";
     if (piece.isWhite) {
-        fileName = fileName + "white";
+        color = "white";
     } else {
-        fileName = fileName + "black";
+        color = "black";
     }
+    fileName = fileName + color;
     fileName = fileName + pieceFileNames[piece.type]
+
+    pieceImages[color + piece.type] = img;
     img.setAttribute("src", fileName + ".png");
 }
