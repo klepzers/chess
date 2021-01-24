@@ -244,6 +244,10 @@ function positionWithinBoard(position){
 function allowedMoves(x,y) {
     let piece = getPieceFromPosition(x,y);
     let allowedPositions = [];
+
+    if (typeof piece !== "object"){
+        return allowedPositions;
+    }
     if (piece.isWhite != currentMoveIsWhite){
         // TODO remove this when enemy is trying check.
         return [];
@@ -288,40 +292,17 @@ function allowedMoves(x,y) {
         }
 
         allowedPositions.push(
-        {"x" : piece.x ,"y" : piece.y - dy },
-        {"x" : piece.x + 1,"y" : piece.y - dy },
-        {"x" : piece.x - 1,"y" : piece.y - dy },
-        {"x" : piece.x + 1,"y" : piece.y},
-        {"x" : piece.x - 1,"y" : piece.y},
-        {"x" : piece.x + 1,"y" : piece.y + dy},
-        {"x" : piece.x,"y" : piece.y + dy},
-        {"x" : piece.x - 1,"y" : piece.y + dy});
+            {"x" : piece.x ,"y" : piece.y - dy },
+            {"x" : piece.x + 1,"y" : piece.y - dy },
+            {"x" : piece.x - 1,"y" : piece.y - dy },
+            {"x" : piece.x + 1,"y" : piece.y},
+            {"x" : piece.x - 1,"y" : piece.y},
+            {"x" : piece.x + 1,"y" : piece.y + dy},
+            {"x" : piece.x,"y" : piece.y + dy},
+            {"x" : piece.x - 1,"y" : piece.y + dy}
+        );
 
-        if (positionHasEnemyPiece({"x" : piece.x ,"y" : piece.y - dy })) {
-            allowedPositions.push({"x" : piece.x ,"y" : piece.y - dy });
-         }
-        if (positionHasEnemyPiece({"x" : piece.x + 1,"y" : piece.y - dy })) {
-            allowedPositions.push({"x" : piece.x + 1,"y" : piece.y - dy });
-         }
-        if (positionHasEnemyPiece({"x" : piece.x - 1,"y" : piece.y - dy })) {
-            allowedPositions.push({"x" : piece.x - 1,"y" : piece.y - dy });
-         }
-        if (positionHasEnemyPiece({"x" : piece.x + 1,"y" : piece.y})) {
-            allowedPositions.push({"x" : piece.x + 1,"y" : piece.y});
-         }
-        if (positionHasEnemyPiece({"x" : piece.x - 1,"y" : piece.y})) {
-            allowedPositions.push({"x" : piece.x - 1,"y" : piece.y});
-         }
-        if (positionHasEnemyPiece({"x" : piece.x + 1,"y" : piece.y + dy})) {
-            allowedPositions.push({"x" : piece.x + 1,"y" : piece.y + dy});
-         }
-        if (positionHasEnemyPiece({"x" : piece.x,"y" : piece.y + dy})) {
-            allowedPositions.push({"x" : piece.x,"y" : piece.y + dy});
-         }
-        if (positionHasEnemyPiece({"x" : piece.x - 1,"y" : piece.y + dy})) {
-            allowedPositions.push({"x" : piece.x - 1,"y" : piece.y + dy});
-         }
-         allowedPositions = allowedPositions.filter(positionHasNotPiece);
+        allowedPositions = allowedPositions.filter(positionHasNotFriendlyPiece);
     }
 
     return allowedPositions.filter(positionWithinBoard);
