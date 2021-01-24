@@ -172,7 +172,7 @@ function getStartingPositions() {
             "isWhite": true,
             "type": "K",
             x: 5,
-            y: 8
+            y: 8 // Original 5 8
         },
         {
             "isWhite": true,
@@ -205,7 +205,7 @@ function getPieceFromPosition(x, y){
         }
     }
 }
-console.log(allowedMoves(1,2));
+console.log(allowedMoves(5,8));
 
 function positionHasNotFriendlyPiece(position){
     const piece = getPieceFromPosition(position.x, position.y);
@@ -225,8 +225,13 @@ function positionHasNotPiece(position){
     return typeof position === "object";
 }
 
-function positionHasEnemyPiece(){
+function positionHasEnemyPiece(position){
     // TODO make this function work again
+    const piece = getPieceFromPosition(position.x, position.y);
+    if (typeof piece === "object" && piece.isWhite != currentMoveIsWhite) {
+        return true;
+    }
+    return false;
 };
 
 function positionWithinBoard(position){
@@ -239,28 +244,66 @@ function positionWithinBoard(position){
 function allowedMoves(x,y) {
     let piece = getPieceFromPosition(x,y);
     let allowedPositions = [];
+
+    if (typeof piece !== "object"){
+        return allowedPositions;
+    }
     if (piece.isWhite != currentMoveIsWhite){
         // TODO remove this when enemy is trying check.
         return [];
     }
+    // This is KNIGHT.
     if (piece.type == "H") {
         allowedPositions.push({"x" : piece.x - 1, "y" : piece.y -2}, {"x" : piece.x + 1, "y" : piece.y -2}, {"x" : piece.x + 2, "y" : piece.y -1}, {"x" : piece.x - 2, "y" : piece.y -1} );
         allowedPositions = allowedPositions.filter(positionHasNotFriendlyPiece);
     }
+    // This is PAWN.
     if (piece.type == "P") {
         let dy = 1;
 
         if (currentMoveIsWhite){
              dy = -1;
         }
-        allowedPositions.push({"x" : piece.x ,"y" : piece.y + dy }, {"x" : piece.x + 1,"y" : piece.y + dy }, {"x" : piece.x - 1,"y" : piece.y + dy });
+
+        allowedPositions.push({"x" : piece.x ,"y" : piece.y + dy });
 
         // First move can go 1 or 2 steps for P. Wrong color is filtered later.
         if (y == 7 || y == 2) {
             allowedPositions.push({"x" : piece.x ,"y" : piece.y + 2*dy });
         }
+        //allowedPositions.push({"x" : piece.x + 1,"y" : piece.y + dy }, {"x" : piece.x - 1,"y" : piece.y + dy });
+        allowedPositions = allowedPositions.filter(positionHasNotPiece); // TODO possibly redundant
+
+        if (positionHasEnemyPiece({"x" : piece.x + 1 ,"y" : piece.y + dy})) {
+           allowedPositions.push({"x" : piece.x + 1,"y" : piece.y + dy });
+        }
+        if (positionHasEnemyPiece({"x" : piece.x - 1 ,"y" : piece.y + dy})) {
+            allowedPositions.push({"x" : piece.x - 1,"y" : piece.y + dy });
+         }
     }
     // TODO remove illegal moves for P (fake killing and obstacle)
+
+    // This is KING.
+    if (piece.type == "K") {
+        let dy = 1;
+
+        if (currentMoveIsWhite) {
+            dy = -1;
+        }
+
+        allowedPositions.push(
+            {"x" : piece.x ,"y" : piece.y - dy },
+            {"x" : piece.x + 1,"y" : piece.y - dy },
+            {"x" : piece.x - 1,"y" : piece.y - dy },
+            {"x" : piece.x + 1,"y" : piece.y},
+            {"x" : piece.x - 1,"y" : piece.y},
+            {"x" : piece.x + 1,"y" : piece.y + dy},
+            {"x" : piece.x,"y" : piece.y + dy},
+            {"x" : piece.x - 1,"y" : piece.y + dy}
+        );
+
+        allowedPositions = allowedPositions.filter(positionHasNotFriendlyPiece);
+    }
 
     return allowedPositions.filter(positionWithinBoard);
 }
