@@ -16,7 +16,7 @@ function getStartingPositions() {
             "isWhite": false,
             "type": "P",
             x: 3,
-            y: 2 
+            y: 2
         },
         {
             "isWhite": false,
