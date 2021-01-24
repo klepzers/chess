@@ -172,7 +172,7 @@ function getStartingPositions() {
             "isWhite": true,
             "type": "K",
             x: 5,
-            y: 8
+            y: 8 // Original 5 8
         },
         {
             "isWhite": true,
@@ -205,7 +205,7 @@ function getPieceFromPosition(x, y){
         }
     }
 }
-console.log(allowedMoves(3,7));
+console.log(allowedMoves(5,8));
 
 function positionHasNotFriendlyPiece(position){
     const piece = getPieceFromPosition(position.x, position.y);
@@ -278,6 +278,51 @@ function allowedMoves(x,y) {
          }
     }
     // TODO remove illegal moves for P (fake killing and obstacle)
+
+    // This is KING.
+    if (piece.type == "K") {
+        let dy = 1;
+
+        if (currentMoveIsWhite) {
+            dy = -1;
+        }
+
+        allowedPositions.push(
+        {"x" : piece.x ,"y" : piece.y - dy },
+        {"x" : piece.x + 1,"y" : piece.y - dy },
+        {"x" : piece.x - 1,"y" : piece.y - dy },
+        {"x" : piece.x + 1,"y" : piece.y},
+        {"x" : piece.x - 1,"y" : piece.y},
+        {"x" : piece.x + 1,"y" : piece.y + dy},
+        {"x" : piece.x,"y" : piece.y + dy},
+        {"x" : piece.x - 1,"y" : piece.y + dy});
+
+        if (positionHasEnemyPiece({"x" : piece.x ,"y" : piece.y - dy })) {
+            allowedPositions.push({"x" : piece.x ,"y" : piece.y - dy });
+         }
+        if (positionHasEnemyPiece({"x" : piece.x + 1,"y" : piece.y - dy })) {
+            allowedPositions.push({"x" : piece.x + 1,"y" : piece.y - dy });
+         }
+        if (positionHasEnemyPiece({"x" : piece.x - 1,"y" : piece.y - dy })) {
+            allowedPositions.push({"x" : piece.x - 1,"y" : piece.y - dy });
+         }
+        if (positionHasEnemyPiece({"x" : piece.x + 1,"y" : piece.y})) {
+            allowedPositions.push({"x" : piece.x + 1,"y" : piece.y});
+         }
+        if (positionHasEnemyPiece({"x" : piece.x - 1,"y" : piece.y})) {
+            allowedPositions.push({"x" : piece.x - 1,"y" : piece.y});
+         }
+        if (positionHasEnemyPiece({"x" : piece.x + 1,"y" : piece.y + dy})) {
+            allowedPositions.push({"x" : piece.x + 1,"y" : piece.y + dy});
+         }
+        if (positionHasEnemyPiece({"x" : piece.x,"y" : piece.y + dy})) {
+            allowedPositions.push({"x" : piece.x,"y" : piece.y + dy});
+         }
+        if (positionHasEnemyPiece({"x" : piece.x - 1,"y" : piece.y + dy})) {
+            allowedPositions.push({"x" : piece.x - 1,"y" : piece.y + dy});
+         }
+         allowedPositions = allowedPositions.filter(positionHasNotPiece);
+    }
 
     return allowedPositions.filter(positionWithinBoard);
 }
