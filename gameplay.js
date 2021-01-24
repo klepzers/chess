@@ -268,7 +268,7 @@ function allowedMoves(x,y) {
         allowedPositions.push({"x" : piece.x ,"y" : piece.y + dy });
 
         // First move can go 1 or 2 steps for P. Wrong color is filtered later.
-        if (y == 7 || y == 2) {
+        if ((y == 7 || y == 2) && positionHasNotPiece({"x" : piece.x ,"y" : piece.y + dy })) {
             allowedPositions.push({"x" : piece.x ,"y" : piece.y + 2*dy });
         }
         //allowedPositions.push({"x" : piece.x + 1,"y" : piece.y + dy }, {"x" : piece.x - 1,"y" : piece.y + dy });
