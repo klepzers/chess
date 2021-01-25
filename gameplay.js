@@ -225,6 +225,15 @@ function positionHasNotPiece(position){
     return typeof position === "object";
 }
 
+function positionHasPiece(position){
+    // TODO make this function work again
+    const piece = getPieceFromPosition(position.x, position.y);
+    if (typeof piece === "object") {
+        return true;
+    }
+    return false;
+}
+
 function positionHasEnemyPiece(position){
     // TODO make this function work again
     const piece = getPieceFromPosition(position.x, position.y);
@@ -232,13 +241,30 @@ function positionHasEnemyPiece(position){
         return true;
     }
     return false;
-};
+}
 
 function positionWithinBoard(position){
     if (position.x > 8 || position.x < 1 || position.y > 8 || position.y < 1) {
         return false;
     }
     return typeof position === "object";
+}
+
+function nextX(x, y, dx, dy){
+    let allowedPositions = [];
+    for (i = 1; i < 8; i++){
+
+        if (positionHasPiece({"x" : x + dx * i ,"y" : y + dy * i }) ){
+            if (positionHasEnemyPiece({"x" : x + dx * i ,"y" : y + dy * i })){
+                console.log("iekāpšana");
+                allowedPositions.push({"x" : x + dx * i ,"y" : y + dy * i });
+            }
+            break;
+        }
+        allowedPositions.push({"x" : x + dx * i ,"y" : y + dy * i });
+    }
+    console.log(allowedPositions);
+    return allowedPositions;
 }
 
 function allowedMoves(x,y) {
@@ -256,6 +282,7 @@ function allowedMoves(x,y) {
     if (piece.type == "H") {
         allowedPositions.push({"x" : piece.x - 1, "y" : piece.y -2}, {"x" : piece.x + 1, "y" : piece.y -2}, {"x" : piece.x + 2, "y" : piece.y -1}, {"x" : piece.x - 2, "y" : piece.y -1} );
         allowedPositions = allowedPositions.filter(positionHasNotFriendlyPiece);
+        // TODO knight needs to go back also.
     }
     // This is PAWN.
     if (piece.type == "P") {
@@ -304,6 +331,24 @@ function allowedMoves(x,y) {
 
         allowedPositions = allowedPositions.filter(positionHasNotFriendlyPiece);
     }
+    // This is ROOK.
+    if (piece.type == "R"){
 
+        // for (dy = 1; dy < 8; dy++){
+        //     if (positionHasPiece({"x" : piece.x ,"y" : piece.y - dy }) ){
+        //         if (positionHasEnemyPiece({"x" : piece.x ,"y" : piece.y - dy })){
+        //             console.log("iekāpšana");
+        //             allowedPositions.push({"x" : piece.x ,"y" : piece.y - dy });
+        //         }
+        //         break;
+        //     }
+        //     allowedPositions.push({"x" : piece.x ,"y" : piece.y - dy });
+        // }
+       allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, 0, -1));
+       allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, -1, 0));
+       allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, 0, 1));
+       allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, 1, 0));
+    }
+    console.log(allowedPositions);
     return allowedPositions.filter(positionWithinBoard);
 }
