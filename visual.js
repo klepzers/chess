@@ -72,42 +72,7 @@ function getMousePos(canvas, e) {
     };
 }
 
-let oldAllowedPositions = [];
-function clickOnPiece(e) {
-    //getting mouse position on the clicked piece
-    let mousePos = getMousePos(canvas, e);
-    let boardFieldX = Math.ceil(mousePos.x / squareSize);
-    let boardFieldY = Math.ceil(mousePos.y / squareSize);
 
-    //highlighting the piece clicked on
-    ctx.strokeStyle = "#e6ac00"
-    ctx.strokeRect(boardFieldX * squareSize - squareSize, boardFieldY * squareSize - squareSize, squareSize, squareSize);
-
-    //returning array with allowed moves
-    let allowedPositions = allowedMoves(boardFieldX, boardFieldY);
-
-    // //drawing new squares to overdraw old allowed moves
-    // oldAllowedPositions.forEach(position => {
-    //     if ((position.x + position.y) % 2 == 0) {
-    //         ctx.fillStyle = "whitesmoke";
-    //     } else {
-    //         ctx.fillStyle = "grey";
-    //     }
-    //     ctx.fillRect((position.x * squareSize - squareSize), (position.y * squareSize - squareSize), squareSize, squareSize);
-    // })
-    //re-draw the whole board
-    drawChessGame();
-    //iterating through allowed positions and drawing them on canvas
-    allowedPositions.forEach(position => {
-        //draw allowed position markers
-        ctx.beginPath();
-        ctx.arc((position.x * squareSize) - (1 / 2 * squareSize), (position.y * squareSize) - (1 / 2 * squareSize), 1 / 10 * squareSize, 0, 2 * Math.PI);
-        ctx.fillStyle = "#e6ac00";
-        ctx.fill();
-    })
-    // //saving old allowed positions for hiding them when clicked on next piece
-    // oldAllowedPositions = allowedPositions;
-}
 
 function loadImages() {
 
@@ -140,4 +105,39 @@ function drawPiece(piece) {
 
     pieceImages[color + piece.type] = img;
     img.setAttribute("src", fileName + ".png");
+}
+
+//creating an array that saves old moves for re-drawing allowed move markers
+// let oldAllowedPositions = [];
+function clickOnPiece(e) {
+    //getting mouse position on the clicked piece
+    let mousePos = getMousePos(canvas, e);
+    let boardFieldX = Math.ceil(mousePos.x / squareSize);
+    let boardFieldY = Math.ceil(mousePos.y / squareSize);
+
+    //returning array with allowed moves
+    let allowedPositions = allowedMoves(boardFieldX, boardFieldY);
+
+    // //drawing new squares to overdraw old allowed moves
+    // oldAllowedPositions.forEach(position => {
+    //     if ((position.x + position.y) % 2 == 0) {
+    //         ctx.fillStyle = "whitesmoke";
+    //     } else {
+    //         ctx.fillStyle = "grey";
+    //     }
+    //     ctx.fillRect((position.x * squareSize - squareSize), (position.y * squareSize - squareSize), squareSize, squareSize);
+    // })
+
+    //re-draw the whole board
+    drawChessGame();
+    //iterating through allowed positions and drawing them on canvas
+    allowedPositions.forEach(position => {
+        //draw allowed position markers
+        ctx.beginPath();
+        ctx.arc((position.x * squareSize) - (1 / 2 * squareSize), (position.y * squareSize) - (1 / 2 * squareSize), 1 / 10 * squareSize, 0, 2 * Math.PI);
+        ctx.fillStyle = "#e6ac00";
+        ctx.fill();
+    })
+    // //saving old allowed positions for hiding them when clicked on next piece
+    // oldAllowedPositions = allowedPositions;
 }
