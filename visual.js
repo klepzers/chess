@@ -74,55 +74,8 @@ function drawPieces() {
     })
 }
 
-// Getting mouse position when clicked.
-function getMousePos(canvas, e) {
-    var rect = canvas.getBoundingClientRect();
-    return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-    };
-}
-
-let oldAllowedPositions = [];
-function clickOnPiece(e) {
-    //getting mouse position on the clicked piece
-    let mousePos = getMousePos(canvas, e);
-    let boardFieldX = Math.ceil(mousePos.x / squareSize - 1);
-
-    let boardFieldY = Math.ceil(mousePos.y / squareSize - 1);
-    console.log(boardFieldX)
-    console.log(boardFieldY)
-
-
-    //returning array with allowed moves
-    let allowedPositions = allowedMoves(boardFieldX, boardFieldY);
-
-    // //drawing new squares to overdraw old allowed moves
-    // oldAllowedPositions.forEach(position => {
-    //     if ((position.x + position.y) % 2 == 0) {
-    //         ctx.fillStyle = "whitesmoke";
-    //     } else {
-    //         ctx.fillStyle = "grey";
-    //     }
-    //     ctx.fillRect((position.x * squareSize - squareSize), (position.y * squareSize - squareSize), squareSize, squareSize);
-    // })
-
-    //re-draw the whole board
-    drawChessGame();
-    //iterating through allowed positions and drawing them on canvas
-    allowedPositions.forEach(position => {
-        //draw allowed position markers
-        ctx.beginPath();
-        ctx.arc((position.x * squareSize + boardOffset) - (1 / 2 * squareSize), (position.y * squareSize + boardOffset) - (1 / 2 * squareSize), 1 / 10 * squareSize, 0, 2 * Math.PI);
-        ctx.fillStyle = "#e6ac00";
-        ctx.fill();
-    })
-    // //saving old allowed positions for hiding them when clicked on next piece
-    // oldAllowedPositions = allowedPositions;
-}
-
 function loadImages() {
-
+    console.log("hello!");
 }
 
 function drawPiece(piece) {
@@ -139,7 +92,7 @@ function drawPiece(piece) {
         P: "Pawn"
     }
 
-    //logic to make which piece is necessary
+    // Logic to make which piece is necessary.
     let fileName = "assets/";
     let color = "";
     if (piece.isWhite) {
@@ -154,37 +107,65 @@ function drawPiece(piece) {
     img.setAttribute("src", fileName + ".png");
 }
 
-//creating an array that saves old moves for re-drawing allowed move markers
-// let oldAllowedPositions = [];
-function clickOnPiece(e) {
-    //getting mouse position on the clicked piece
-    let mousePos = getMousePos(canvas, e);
-    let boardFieldX = Math.ceil(mousePos.x / squareSize);
-    let boardFieldY = Math.ceil(mousePos.y / squareSize);
+// Getting mouse position when canvas is clicked.
+function getMousePos(canvas, e) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
+}
 
-    //returning array with allowed moves
+let pieceToMove = null;
+
+function clickOnPiece(e) {
+    // Getting mouse position on the clicked piece.
+    let mousePos = getMousePos(canvas, e);
+    let boardFieldX = Math.ceil(mousePos.x / squareSize - 1);
+    let boardFieldY = Math.ceil(mousePos.y / squareSize - 1);
+
+    // Checking if piece is clicked or null
+    let currentPiece = getPieceFromXY(boardFieldX, boardFieldY)
+
+    // Returning array with allowed moves.
     let allowedPositions = allowedMoves(boardFieldX, boardFieldY);
 
-    // //drawing new squares to overdraw old allowed moves
-    // oldAllowedPositions.forEach(position => {
-    //     if ((position.x + position.y) % 2 == 0) {
-    //         ctx.fillStyle = "whitesmoke";
-    //     } else {
-    //         ctx.fillStyle = "grey";
-    //     }
-    //     ctx.fillRect((position.x * squareSize - squareSize), (position.y * squareSize - squareSize), squareSize, squareSize);
-    // })
-
-    //re-draw the whole board
+    // Re-draw the board before adding new markers.
     drawChessGame();
-    //iterating through allowed positions and drawing them on canvas
+
+    // Drawing allowed move markers on canvas.
     allowedPositions.forEach(position => {
-        //draw allowed position markers
+        // Draw allowed position markers.
         ctx.beginPath();
-        ctx.arc((position.x * squareSize) - (1 / 2 * squareSize), (position.y * squareSize) - (1 / 2 * squareSize), 1 / 10 * squareSize, 0, 2 * Math.PI);
+        ctx.arc((position.x * squareSize + boardOffset) - (1 / 2 * squareSize), (position.y * squareSize + boardOffset) - (1 / 2 * squareSize), 1 / 10 * squareSize, 0, 2 * Math.PI);
         ctx.fillStyle = "#e6ac00";
         ctx.fill();
     })
-    // //saving old allowed positions for hiding them when clicked on next piece
-    // oldAllowedPositions = allowedPositions;
+
+    // Moving pieces. 
+    if (pieceToMove != null) {
+        movePiece();
+
+    } else {
+        selectPiece();
+    }
+
+}
+
+function getPieceFromXY(x, y) {
+    const piece = getPieceFromPosition(x, y);
+    if (typeof piece === "object") {
+        return piece;
+    }
+    return null;
+}
+
+function movePiece() {
+    console.log("hello");
+    pieceToMove = null;
+}
+
+function selectPiece() {
+    console.log("world");
+    pieceToMove = {};
 }
