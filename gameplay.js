@@ -280,7 +280,16 @@ function allowedMoves(x,y) {
     }
     // This is KNIGHT.
     if (piece.type == "H") {
-        allowedPositions.push({"x" : piece.x - 1, "y" : piece.y -2}, {"x" : piece.x + 1, "y" : piece.y -2}, {"x" : piece.x + 2, "y" : piece.y -1}, {"x" : piece.x - 2, "y" : piece.y -1} );
+        allowedPositions.push(
+            {"x" : piece.x - 1, "y" : piece.y -2},
+            {"x" : piece.x + 1, "y" : piece.y -2},
+            {"x" : piece.x + 2, "y" : piece.y -1},
+            {"x" : piece.x - 2, "y" : piece.y -1},
+            {"x" : piece.x + 1, "y" : piece.y +2},
+            {"x" : piece.x - 1, "y" : piece.y +2},
+            {"x" : piece.x + 2, "y" : piece.y +1},
+            {"x" : piece.x - 2, "y" : piece.y +1}
+            );
         allowedPositions = allowedPositions.filter(positionHasNotFriendlyPiece);
         // TODO knight needs to go back also.
     }
@@ -349,6 +358,23 @@ function allowedMoves(x,y) {
        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, 0, 1));
        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, 1, 0));
     }
-    console.log(allowedPositions);
+    // This is BISHOP.
+    if (piece.type == "B") {
+        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, 1, 1));
+        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, -1, -1));
+        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, 1, -1));
+        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, -1, 1));
+    }
+    // This is Queen.
+    if (piece.type == "Q") {
+        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, 0, -1));
+        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, -1, 0));
+        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, 0, 1));
+        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, 1, 0));
+        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, 1, 1));
+        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, -1, -1));
+        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, 1, -1));
+        allowedPositions = allowedPositions.concat(nextX(piece.x, piece.y, -1, 1));
+    }
     return allowedPositions.filter(positionWithinBoard);
 }
