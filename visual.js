@@ -92,7 +92,7 @@ function drawPiece(piece) {
         P: "Pawn"
     }
 
-    // Logic to make which piece is necessary.
+    // Logic to draw necessary piece from assets folder.
     let fileName = "assets/";
     let color = "";
     if (piece.isWhite) {
@@ -123,9 +123,8 @@ function clickOnPiece(e) {
     let mousePos = getMousePos(canvas, e);
     let boardFieldX = Math.ceil(mousePos.x / squareSize - 1);
     let boardFieldY = Math.ceil(mousePos.y / squareSize - 1);
-
     // Checking if piece is clicked or null
-    let currentPiece = getPieceFromXY(boardFieldX, boardFieldY)
+    let currentPiece = getPieceFromXY(boardFieldX, boardFieldY);
 
     // Returning array with allowed moves.
     let allowedPositions = allowedMoves(boardFieldX, boardFieldY);
@@ -143,13 +142,16 @@ function clickOnPiece(e) {
     })
 
     // Moving pieces. 
-    if (pieceToMove != null) {
-        movePiece();
-
+    if (pieceToMove == null) {
+        // Select piece.
+        pieceToMove = currentPiece;
     } else {
-        selectPiece();
-    }
+        // Move piece.
+        pieceToMove.x = boardFieldX;
+        pieceToMove.y = boardFieldY;
+        pieceToMove = null;
 
+    }
 }
 
 function getPieceFromXY(x, y) {
@@ -158,14 +160,4 @@ function getPieceFromXY(x, y) {
         return piece;
     }
     return null;
-}
-
-function movePiece() {
-    console.log("hello");
-    pieceToMove = null;
-}
-
-function selectPiece() {
-    console.log("world");
-    pieceToMove = {};
 }
