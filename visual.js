@@ -150,7 +150,6 @@ function clickOnPiece(e) {
         pieceToMove.x = boardFieldX;
         pieceToMove.y = boardFieldY;
         pieceToMove = null;
-
     }
 }
 
