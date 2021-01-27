@@ -75,7 +75,6 @@ function drawPieces() {
 }
 
 function loadImages() {
-    console.log("hello!");
 }
 
 function drawPiece(piece) {
