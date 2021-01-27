@@ -128,6 +128,9 @@ function clickOnPiece(e) {
 
     // Returning array with allowed moves.
     let allowedPositions = allowedMoves(boardFieldX, boardFieldY);
+    if (!pieceToMove && currentPiece && !checkIfPieceHasMove(currentPiece)) {
+        return false;
+    }
 
     // Re-draw the board before adding new markers.
     drawChessGame();
@@ -141,15 +144,21 @@ function clickOnPiece(e) {
         ctx.fill();
     })
 
-    // Moving pieces. 
+    // Moving pieces.
     if (pieceToMove == null) {
         // Select piece.
         pieceToMove = currentPiece;
-    } else {
+    } else if (pieceToMove) {
         // Move piece.
-        pieceToMove.x = boardFieldX;
-        pieceToMove.y = boardFieldY;
-        pieceToMove = null;
+        // let allowedPiecePositions = allowedMoves(pieceToMove.x, pieceToMove.y);
+        if (moveIsAllowed(pieceToMove, boardFieldX, boardFieldY)){
+            handleKilling(boardFieldX, boardFieldY);
+            pieceToMove.x = boardFieldX;
+            pieceToMove.y = boardFieldY;
+            handleConvert(boardFieldX, boardFieldY);
+            pieceToMove = null;
+            switchActivePlayer();
+        }
     }
 }
 
