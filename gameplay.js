@@ -172,7 +172,7 @@ function getStartingPositions() {
             "isWhite": true,
             "type": "K",
             x: 5,
-            y: 8 // Original 5 8
+            y: 8
         },
         {
             "isWhite": true,
@@ -205,7 +205,7 @@ function getPieceFromPosition(x, y){
         }
     }
 }
-console.log(allowedMoves(5,8));
+console.log(allowedMoves(8,8));
 
 function positionHasNotFriendlyPiece(position){
     const piece = getPieceFromPosition(position.x, position.y);
@@ -225,6 +225,15 @@ function positionHasNotPiece(position){
     return typeof position === "object";
 }
 
+function positionHasPiece(position){
+    // TODO make this function work again
+    const piece = getPieceFromPosition(position.x, position.y);
+    if (typeof piece === "object") {
+        return true;
+    }
+    return false;
+}
+
 function positionHasEnemyPiece(position){
     // TODO make this function work again
     const piece = getPieceFromPosition(position.x, position.y);
@@ -232,13 +241,30 @@ function positionHasEnemyPiece(position){
         return true;
     }
     return false;
-};
+}
 
 function positionWithinBoard(position){
     if (position.x > 8 || position.x < 1 || position.y > 8 || position.y < 1) {
         return false;
     }
     return typeof position === "object";
+}
+
+function allowedLongMovePositions(x, y, dx, dy){
+    let allowedPositions = [];
+    for (i = 1; i < 8; i++){
+
+        if (positionHasPiece({"x" : x + dx * i ,"y" : y + dy * i }) ){
+            if (positionHasEnemyPiece({"x" : x + dx * i ,"y" : y + dy * i })){
+                console.log("iekāpšana");
+                allowedPositions.push({"x" : x + dx * i ,"y" : y + dy * i });
+            }
+            break;
+        }
+        allowedPositions.push({"x" : x + dx * i ,"y" : y + dy * i });
+    }
+    console.log(allowedPositions);
+    return allowedPositions;
 }
 
 function allowedMoves(x,y) {
@@ -254,8 +280,18 @@ function allowedMoves(x,y) {
     }
     // This is KNIGHT.
     if (piece.type == "H") {
-        allowedPositions.push({"x" : piece.x - 1, "y" : piece.y -2}, {"x" : piece.x + 1, "y" : piece.y -2}, {"x" : piece.x + 2, "y" : piece.y -1}, {"x" : piece.x - 2, "y" : piece.y -1} );
+        allowedPositions.push(
+            {"x" : piece.x - 1, "y" : piece.y -2},
+            {"x" : piece.x + 1, "y" : piece.y -2},
+            {"x" : piece.x + 2, "y" : piece.y -1},
+            {"x" : piece.x - 2, "y" : piece.y -1},
+            {"x" : piece.x + 1, "y" : piece.y +2},
+            {"x" : piece.x - 1, "y" : piece.y +2},
+            {"x" : piece.x + 2, "y" : piece.y +1},
+            {"x" : piece.x - 2, "y" : piece.y +1}
+            );
         allowedPositions = allowedPositions.filter(positionHasNotFriendlyPiece);
+        // TODO knight needs to go back also.
     }
     // This is PAWN.
     if (piece.type == "P") {
@@ -268,7 +304,7 @@ function allowedMoves(x,y) {
         allowedPositions.push({"x" : piece.x ,"y" : piece.y + dy });
 
         // First move can go 1 or 2 steps for P. Wrong color is filtered later.
-        if (y == 7 || y == 2) {
+        if ((y == 7 || y == 2) && positionHasNotPiece({"x" : piece.x ,"y" : piece.y + dy })) {
             allowedPositions.push({"x" : piece.x ,"y" : piece.y + 2*dy });
         }
         //allowedPositions.push({"x" : piece.x + 1,"y" : piece.y + dy }, {"x" : piece.x - 1,"y" : piece.y + dy });
@@ -304,6 +340,41 @@ function allowedMoves(x,y) {
 
         allowedPositions = allowedPositions.filter(positionHasNotFriendlyPiece);
     }
+    // This is ROOK.
+    if (piece.type == "R"){
 
+        // for (dy = 1; dy < 8; dy++){
+        //     if (positionHasPiece({"x" : piece.x ,"y" : piece.y - dy }) ){
+        //         if (positionHasEnemyPiece({"x" : piece.x ,"y" : piece.y - dy })){
+        //             console.log("iekāpšana");
+        //             allowedPositions.push({"x" : piece.x ,"y" : piece.y - dy });
+        //         }
+        //         break;
+        //     }
+        //     allowedPositions.push({"x" : piece.x ,"y" : piece.y - dy });
+        // }
+       allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, 0, -1));
+       allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, -1, 0));
+       allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, 0, 1));
+       allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, 1, 0));
+    }
+    // This is BISHOP.
+    if (piece.type == "B") {
+        allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, 1, 1));
+        allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, -1, -1));
+        allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, 1, -1));
+        allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, -1, 1));
+    }
+    // This is Queen.
+    if (piece.type == "Q") {
+        allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, 0, -1));
+        allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, -1, 0));
+        allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, 0, 1));
+        allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, 1, 0));
+        allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, 1, 1));
+        allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, -1, -1));
+        allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, 1, -1));
+        allowedPositions = allowedPositions.concat(allowedLongMovePositions(piece.x, piece.y, -1, 1));
+    }
     return allowedPositions.filter(positionWithinBoard);
 }
