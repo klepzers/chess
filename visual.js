@@ -62,11 +62,6 @@ function drawBoard() {
     }
 }
 
-// function drawInitialPieces() {
-//     startingPositions.forEach(function (piece) {
-//         drawPiece(piece);
-//     })
-// }
 
 function drawPieces() {
     pieces.forEach(function (piece) {
@@ -75,6 +70,7 @@ function drawPieces() {
 }
 
 function loadImages() {
+
 }
 
 function drawPiece(piece) {
@@ -104,6 +100,7 @@ function drawPiece(piece) {
 
     pieceImages[color + piece.type] = img;
     img.setAttribute("src", fileName + ".png");
+
 }
 
 // Getting mouse position when canvas is clicked.
@@ -123,10 +120,13 @@ function clickOnPiece(e) {
     let boardFieldX = Math.ceil(mousePos.x / squareSize - 1);
     let boardFieldY = Math.ceil(mousePos.y / squareSize - 1);
     // Checking if piece is clicked or null
-    let currentPiece = getPieceFromXY(boardFieldX, boardFieldY);
+    let currentPiece = getPieceFromPosition(boardFieldX, boardFieldY);
 
     // Returning array with allowed moves.
     let allowedPositions = allowedMoves(boardFieldX, boardFieldY);
+    if (!pieceToMove && currentPiece && !checkIfPieceHasMove(currentPiece)) {
+        return false;
+    }
 
     // Re-draw the board before adding new markers.
     drawChessGame();
@@ -140,22 +140,20 @@ function clickOnPiece(e) {
         ctx.fill();
     })
 
-    // Moving pieces. 
+    // Moving pieces.
     if (pieceToMove == null) {
         // Select piece.
         pieceToMove = currentPiece;
-    } else {
+    } else if (pieceToMove) {
         // Move piece.
-        pieceToMove.x = boardFieldX;
-        pieceToMove.y = boardFieldY;
-        pieceToMove = null;
+        // let allowedPiecePositions = allowedMoves(pieceToMove.x, pieceToMove.y);
+        if (moveIsAllowed(pieceToMove, boardFieldX, boardFieldY)) {
+            handleKilling(boardFieldX, boardFieldY);
+            pieceToMove.x = boardFieldX;
+            pieceToMove.y = boardFieldY;
+            handleConvert(boardFieldX, boardFieldY);
+            pieceToMove = null;
+            switchActivePlayer();
+        }
     }
-}
-
-function getPieceFromXY(x, y) {
-    const piece = getPieceFromPosition(x, y);
-    if (typeof piece === "object") {
-        return piece;
-    }
-    return null;
 }
