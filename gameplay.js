@@ -196,6 +196,14 @@ function getStartingPositions() {
 }
 let pieces = getStartingPositions();
 let currentMoveIsWhite = true;
+let killingHasHappened = false;
+let pawnMove = new Audio('assets/pawn_move.mp3');
+let bishopMove = new Audio('assets/bishop_move.mp3');
+let knightMove = new Audio('assets/horse_move.mp3');
+let rookMove = new Audio('assets/rook_move.mp3');
+let queenMove = new Audio('assets/queen_move.mp3');
+let kingMove = new Audio('assets/king_move.mp3');
+let killingMoveSound = new Audio('assets/killing_a_piece.mp3');
 
 function switchActivePlayer(){
     currentMoveIsWhite = !currentMoveIsWhite;
@@ -399,6 +407,7 @@ function handleKilling(x, y) {
         if (killedPiece) {
             killedPiece.x = 0;
             killedPiece.y = Number(!currentMoveIsWhite) * 8;
+            killingHasHappened = true;
         }
     }
     //TODO consider using splice.
@@ -420,9 +429,28 @@ function convertPositionToString(position) {
 }
 
 function moveHistory(piece, newposition) {
-
    let col = (piece.isWhite ? "White" : "Black");
    oldposition = {"x" : piece.x , "y" : piece.y};
    console.log( col + " " + convertPositionToString(oldposition) + " -> " + convertPositionToString(newposition));
+}
 
+function gameSounds() {
+    if (killingHasHappened) {
+        killingMoveSound.play();
+    } else {
+        switch (pieceToMove.type) {
+            case "P" : pawnMove.play();
+            break;
+            case "B" : bishopMove.play();
+            break;
+            case "H" : knightMove.play();
+            break;
+            case "R" : rookMove.play();
+            break;
+            case "Q" : queenMove.play();
+            break;
+            case "K" : kingMove.play();
+            break;
+        }
+    }
 }

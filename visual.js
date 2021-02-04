@@ -150,11 +150,14 @@ function clickOnPiece(e) {
     } else if (pieceToMove) {
         // Move piece.
         // let allowedPiecePositions = allowedMoves(pieceToMove.x, pieceToMove.y);
+        // TODO possible problem with game glitch.
         if (moveIsAllowed(pieceToMove, boardFieldX, boardFieldY)){
             moveHistory(pieceToMove, { "x" : boardFieldX, "y" : boardFieldY});
+            killingHasHappened = false;
             handleKilling(boardFieldX, boardFieldY);
             pieceToMove.x = boardFieldX;
             pieceToMove.y = boardFieldY;
+            gameSounds(pieceToMove);
             handleConvert(boardFieldX, boardFieldY);
             pieceToMove = null;
             switchActivePlayer();
