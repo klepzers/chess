@@ -125,7 +125,6 @@ function clickOnPiece(e) {
     let boardFieldY = Math.ceil(mousePos.y / squareSize - 1);
     // Checking if piece is clicked or null
     let currentPiece = getPieceFromXY(boardFieldX, boardFieldY);
-
     // Returning array with allowed moves.
     let allowedPositions = allowedMoves(boardFieldX, boardFieldY);
     if (!pieceToMove && currentPiece && !checkIfPieceHasMove(currentPiece)) {
@@ -152,6 +151,7 @@ function clickOnPiece(e) {
         // Move piece.
         // let allowedPiecePositions = allowedMoves(pieceToMove.x, pieceToMove.y);
         if (moveIsAllowed(pieceToMove, boardFieldX, boardFieldY)){
+            moveHistory(pieceToMove, { "x" : boardFieldX, "y" : boardFieldY});
             handleKilling(boardFieldX, boardFieldY);
             pieceToMove.x = boardFieldX;
             pieceToMove.y = boardFieldY;

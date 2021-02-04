@@ -293,7 +293,6 @@ function allowedMoves(x,y,checkMateCheck = false) {
             {"x" : piece.x - 2, "y" : piece.y +1}
             );
         allowedPositions = allowedPositions.filter(positionHasNotFriendlyPiece);
-        // TODO knight needs to go back also.
     }
     // This is PAWN.
     if (piece.type == "P") {
@@ -402,6 +401,7 @@ function handleKilling(x, y) {
             killedPiece.y = Number(!currentMoveIsWhite) * 8;
         }
     }
+    //TODO consider using splice.
 }
 
 function handleConvert(x, y) {
@@ -413,4 +413,16 @@ function handleConvert(x, y) {
 
 function checkIfPieceHasMove(piece) {
     return (piece.isWhite == currentMoveIsWhite);
+}
+
+function convertPositionToString(position) {
+    return String.fromCharCode(64 + position.x) + position.y;
+}
+
+function moveHistory(piece, newposition) {
+
+   let col = (piece.isWhite ? "White" : "Black");
+   oldposition = {"x" : piece.x , "y" : piece.y};
+   console.log( col + " " + convertPositionToString(oldposition) + " -> " + convertPositionToString(newposition));
+
 }
