@@ -2,9 +2,9 @@
 
     class DatabaseParams{
         protected $db_params = array(
-            'host' => 'localhost',
-            'db_name' => 'chessapidatabase',
-            'username' => 'root',
+            'host' => '',
+            'db_name' => '',
+            'username' => '',
             'password' => ''
         );
     }

@@ -1,7 +1,7 @@
 <?php
 
     class Data {
-        // Table (to be created)
+        // Table (remember to name this variable the same when you create your table in database)
         private $table = '';
 
         // Post properties
@@ -13,23 +13,19 @@
         }
 
         public function savePositionsToDatabase(){
-            // Query
             $query = 'INSERT INTO ' . $this->table . '
                 SET
                 positions = :positions';
 
-            // Prepare statement
+            // Query preparing, binding & execution
             $stmt = $this->conn->prepare($query);
 
-            // Bind data
             $stmt->bindParam(':positions', $this->positions);
 
-            // Execute query
             if($stmt->execute()){
                 return true;
             }
 
-            // Print error
             printf("Error:", $stmt->error);
             return false;
         }
