@@ -1,7 +1,10 @@
 <?php
 
     class Data {
-        // Table (remember to name this variable the same when you create your table in database)
+        /*
+        Table (remember to name this variable the same when you create your table in database)
+        Check create_table_example.sql file before creating table
+        */
         private $table = '';
 
         // Post properties
